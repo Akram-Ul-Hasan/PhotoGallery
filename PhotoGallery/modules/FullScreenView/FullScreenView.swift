@@ -109,13 +109,21 @@ struct FullScreenView: View {
                 }
                 
                 Button {
-                    //TODO: implement share
+                    if let url = URL(string: photoURL) {
+                        shareItems = [url]
+                        isShowingShareSheet = true
+                    }
                 } label: {
                     Image(systemName: "square.and.arrow.up")
                         .font(.system(size: 16))
                         .foregroundStyle(Color.whiteLevel1)
                 }
             }
+        }
+        .sheet(isPresented: $isShowingShareSheet) {
+            ShareSheet(activityItems: shareItems)
+                .presentationDetents([.medium])
+                .presentationDragIndicator(.visible)
         }
     }
 }
