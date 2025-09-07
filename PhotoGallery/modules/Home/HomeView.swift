@@ -27,9 +27,9 @@ struct HomeView: View {
             let cellSize = (screenWidth - totalSpacing) / CGFloat(columns.count)
             
             ZStack {
-                if viewModel.isLoading {
+                if viewModel.isFirstLoad {
                     ProgressView(StringConstants.Home.loadingPhotos)
-                } else if let error = viewModel.errorMessage {
+                } else if let error = viewModel.errorMessage, viewModel.photos.isEmpty {
                     Text(error)
                         .foregroundStyle(.red)
                         .multilineTextAlignment(.center)
@@ -42,18 +42,30 @@ struct HomeView: View {
                                     .onTapGesture {
                                         selectedPhoto = photo
                                     }
+                                    .onAppear {
+                                        viewModel.loadMorePhotosIfNeeded(currentItem: photo)
+                                    }
                             }
                         }
                         .padding(spacing)
+                        
+                        if viewModel.isLoading {
+                            ProgressView()
+                                .padding()
+                        }
                     }
                 }
             }
-            .onAppear {
-                viewModel.fetchPhotos()
-            }
+            
             .navigationTitle(StringConstants.Home.title)
             .fullScreenCover(item: $selectedPhoto) { photo in
                 FullScreenView(photoURL: photo.downloadURL)
+            }
+            
+            .onAppear {
+                if viewModel.photos.isEmpty {
+                    viewModel.loadInitialPhotos()
+                }
             }
         }
     }

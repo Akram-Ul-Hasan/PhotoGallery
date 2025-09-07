@@ -16,22 +16,59 @@ final class HomeViewModel: ObservableObject {
     private let networkService: NetworkServiceProtocol
     private var cancellables = Set<AnyCancellable>()
     
+    private var currentPage = 1
+    private var limit = 30
+    private var canLoadMore = true
+    
+    var isFirstLoad: Bool {
+        photos.isEmpty && isLoading
+    }
+    
     init(networkService: NetworkServiceProtocol = NetworkService.shared) {
         self.networkService = networkService
     }
     
-    func fetchPhotos(page: Int = 1, limit: Int = 30) {
+    func loadInitialPhotos() {
+        reset()
+        fetchPhotos()
+    }
+    
+    func loadMorePhotosIfNeeded(currentItem: Photo?) {
+        guard let currentItem else { return }
+        guard !isLoading, canLoadMore else { return }
+        
+        let thresholdIndex = photos.index(photos.endIndex, offsetBy: -6, limitedBy: photos.startIndex) ?? photos.startIndex
+        if let index = photos.firstIndex(where: { $0.id == currentItem.id }),
+           index >= thresholdIndex {
+            fetchPhotos()
+        }
+    }
+    
+    func fetchPhotos() {
+        guard !isLoading, canLoadMore else { return }
+        
         isLoading = true
         
-        networkService.fetchPhotos(page: page, limit: limit)
+        networkService.fetchPhotos(page: currentPage, limit: limit)
             .sink { [weak self] completion in
                 self?.isLoading = false
                 if case .failure(let error) = completion {
+                    self?.errorMessage = error.localizedDescription
                     print("Error fetching photos: \(error.localizedDescription)")
                 }
-            } receiveValue: { [weak self] photos in
-                self?.photos = photos
+            } receiveValue: { [weak self] newPhotos in
+                guard let self = self else { return }
+                self.photos.append(contentsOf: newPhotos)
+                self.currentPage += 1
+                self.canLoadMore = !newPhotos.isEmpty
             }
             .store(in: &cancellables)
+    }
+    
+    private func reset() {
+        photos = []
+        currentPage = 1
+        canLoadMore = true
+        errorMessage = nil
     }
 }
