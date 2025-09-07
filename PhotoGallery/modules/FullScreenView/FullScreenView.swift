@@ -17,6 +17,9 @@ struct FullScreenView: View {
     @State private var currentOffset: CGSize = .zero
     @State private var gestureOffset: CGSize = .zero
     
+    @State private var isShowingShareSheet = false
+    @State private var shareItems: [Any] = []
+    
     var body: some View {
         ZStack {
             Color.blackLevel1
@@ -82,33 +85,6 @@ struct FullScreenView: View {
                 }
             }
             
-            VStack {
-                HStack(spacing: 10) {
-                    Spacer()
-                    
-                    Button{
-                        viewModel.savePhotoToGallery(photoURL)
-                    } label: {
-                        Image(systemName: "square.and.arrow.down")
-                            .font(.system(size: 28))
-                            .foregroundStyle(Color.whiteLevel1)
-                            .padding(.trailing, 30)
-                            .padding(.top, 20)
-                    }
-                    
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "xmark")
-                            .font(.system(size: 28))
-                            .foregroundStyle(Color.whiteLevel1)
-                            .padding(.trailing, 30)
-                            .padding(.top, 20)
-                    }
-                }
-                Spacer()
-            }
-            
             if let message = viewModel.message {
                 Text(message)
                     .font(.system(size: 16, weight: .medium))
@@ -119,6 +95,26 @@ struct FullScreenView: View {
                     .cornerRadius(12)
                     .transition(.opacity)
                     .zIndex(1)
+            }
+        }
+        
+        .toolbar {
+            ToolbarItemGroup(placement: .topBarTrailing) {
+                Button{
+                    viewModel.savePhotoToGallery(photoURL)
+                } label: {
+                    Image(systemName: "square.and.arrow.down")
+                        .font(.system(size: 16))
+                        .foregroundStyle(Color.whiteLevel1)
+                }
+                
+                Button {
+                    //TODO: implement share
+                } label: {
+                    Image(systemName: "square.and.arrow.up")
+                        .font(.system(size: 16))
+                        .foregroundStyle(Color.whiteLevel1)
+                }
             }
         }
     }
