@@ -2,7 +2,7 @@
 //  PhotoGalleryApp.swift
 //  PhotoGallery
 //
-//  Created by Techetron Ventures Ltd on 9/7/25.
+//  Created by Akram Ul Hasan on 9/7/25.
 //
 
 import SwiftUI
@@ -11,7 +11,7 @@ import SwiftUI
 struct PhotoGalleryApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            HomeView()
         }
     }
 }
