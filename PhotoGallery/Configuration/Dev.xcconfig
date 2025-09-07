@@ -1,0 +1,11 @@
+//
+//  Dev.xcconfig
+//  PhotoGallery
+//
+//  Created by Akram Ul Hasan on 9/7/25.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://developer.apple.com/documentation/xcode/adding-a-build-configuration-file-to-your-project
+
+BASE_URL = "www.dev.photoGallery.com"
