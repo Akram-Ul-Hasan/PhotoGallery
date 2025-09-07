@@ -2,7 +2,7 @@
 //  PhotoGridCell.swift
 //  PhotoGallery
 //
-//  Created by Techetron Ventures Ltd on 9/7/25.
+//  Created by Akram Ul Hasan on 9/7/25.
 //
 
 import SwiftUI
