@@ -108,6 +108,18 @@ struct FullScreenView: View {
                 }
                 Spacer()
             }
+            
+            if let message = viewModel.message {
+                Text(message)
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 10)
+                    .background(Color.black.opacity(0.7))
+                    .cornerRadius(12)
+                    .transition(.opacity)
+                    .zIndex(1)
+            }
         }
     }
 }
