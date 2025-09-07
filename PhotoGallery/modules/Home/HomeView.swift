@@ -38,13 +38,12 @@ struct HomeView: View {
                     ScrollView {
                         LazyVGrid(columns: columns, spacing: spacing) {
                             ForEach(viewModel.photos) { photo in
-                                PhotoGridCell(photo: photo, cellSize: cellSize)
-                                    .onTapGesture {
-                                        selectedPhoto = photo
-                                    }
-                                    .onAppear {
-                                        viewModel.loadMorePhotosIfNeeded(currentItem: photo)
-                                    }
+                                NavigationLink(destination: FullScreenView(photoURL: photo.downloadURL)) {
+                                    PhotoGridCell(photo: photo, cellSize: cellSize)
+                                }
+                                .onAppear {
+                                    viewModel.loadMorePhotosIfNeeded(currentItem: photo)
+                                }
                             }
                         }
                         .padding(spacing)
@@ -58,10 +57,6 @@ struct HomeView: View {
             }
             
             .navigationTitle(StringConstants.Home.title)
-            .fullScreenCover(item: $selectedPhoto) { photo in
-                FullScreenView(photoURL: photo.downloadURL)
-            }
-            
             .onAppear {
                 if viewModel.photos.isEmpty {
                     viewModel.loadInitialPhotos()
