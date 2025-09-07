@@ -10,7 +10,7 @@ import SwiftUI
 struct FullScreenView: View {
     let photoURL: String
     @Environment(\.dismiss) private var dismiss
-//    @StateObject private var viewModel = FullScreenPhotoViewModel()
+    @StateObject private var viewModel = FullScreenPhotoViewModel()
     
     @State private var currentScale: CGFloat = 1
     @State private var gestureScale: CGFloat = 1
@@ -83,8 +83,19 @@ struct FullScreenView: View {
             }
             
             VStack {
-                HStack {
+                HStack(spacing: 10) {
                     Spacer()
+                    
+                    Button{
+                        viewModel.savePhotoToGallery(photoURL)
+                    } label: {
+                        Image(systemName: "square.and.arrow.down")
+                            .font(.system(size: 28))
+                            .foregroundStyle(Color.whiteLevel1)
+                            .padding(.trailing, 30)
+                            .padding(.top, 20)
+                    }
+                    
                     Button {
                         dismiss()
                     } label: {
