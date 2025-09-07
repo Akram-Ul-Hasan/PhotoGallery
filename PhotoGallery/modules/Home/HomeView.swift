@@ -39,6 +39,9 @@ struct HomeView: View {
                         LazyVGrid(columns: columns, spacing: spacing) {
                             ForEach(viewModel.photos) { photo in
                                 PhotoGridCell(photo: photo, cellSize: cellSize)
+                                    .onTapGesture {
+                                        selectedPhoto = photo
+                                    }
                             }
                         }
                         .padding(spacing)
@@ -49,6 +52,9 @@ struct HomeView: View {
                 viewModel.fetchPhotos()
             }
             .navigationTitle(StringConstants.Home.title)
+            .fullScreenCover(item: $selectedPhoto) { photo in
+                FullScreenView(photoURL: photo.downloadURL)
+            }
         }
     }
 }
