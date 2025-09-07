@@ -15,7 +15,7 @@ struct Photo: Identifiable, Decodable {
     let url: String
     let downloadURL: String
 
-    enum codingKeys: String, CodingKey {
+    enum CodingKeys: String, CodingKey {
         case id
         case author
         case width
