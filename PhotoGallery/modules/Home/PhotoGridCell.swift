@@ -30,7 +30,7 @@ struct PhotoGridCell: View {
             }
         }
         .onAppear {
-            if let url = URL(string: photo.downloadURL) {
+            if let url = URL(string: "https://picsum.photos/id/\(photo.id)/\(Int(cellSize))/\(Int(cellSize))") {
                 loader.load(from: url)
             }
         }
