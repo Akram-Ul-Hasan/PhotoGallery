@@ -19,6 +19,7 @@ final class HomeViewModel: ObservableObject {
     private var currentPage = 1
     private var limit = 30
     private var canLoadMore = true
+    private var lastLoadedPage: Int?
     
     var isFirstLoad: Bool {
         photos.isEmpty && isLoading
@@ -45,19 +46,23 @@ final class HomeViewModel: ObservableObject {
     }
     
     func fetchPhotos() {
-        guard !isLoading, canLoadMore else { return }
+        guard lastLoadedPage != currentPage else { return }
+        lastLoadedPage = currentPage
         
         isLoading = true
+        errorMessage = nil
         
         networkService.fetchPhotos(page: currentPage, limit: limit)
             .sink { [weak self] completion in
-                self?.isLoading = false
+                guard let self = self else { return }
+                self.isLoading = false
                 if case .failure(let error) = completion {
-                    self?.errorMessage = error.localizedDescription
+                    self.errorMessage = error.localizedDescription
                     print("Error fetching photos: \(error.localizedDescription)")
                 }
             } receiveValue: { [weak self] newPhotos in
                 guard let self = self else { return }
+                print(newPhotos.first?.downloadURL ?? "")
                 self.photos.append(contentsOf: newPhotos)
                 self.currentPage += 1
                 self.canLoadMore = !newPhotos.isEmpty
@@ -70,5 +75,6 @@ final class HomeViewModel: ObservableObject {
         currentPage = 1
         canLoadMore = true
         errorMessage = nil
+        lastLoadedPage = nil
     }
 }
