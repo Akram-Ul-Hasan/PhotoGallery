@@ -6,38 +6,48 @@
 //
 
 import SwiftUI
+import Combine
 
 struct PhotoGridCell: View {
     let photo: Photo
     let cellSize: CGFloat
     
+    @State private var image: UIImage? = nil
+    @State private var cancellable: AnyCancellable? = nil
+    
     var body: some View {
-        AsyncImage(url: URL(string: photo.downloadURL)) { phase in
-            switch phase {
-            case .success(let image):
-                image
+        ZStack {
+            if let image = image {
+                Image(uiImage: image)
                     .resizable()
                     .scaledToFill()
                     .frame(width: cellSize, height: cellSize)
-                    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-            
-            case .failure:
-                Image(systemName: "photo")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: cellSize, height: cellSize)
-                    .foregroundStyle(.gray)
-                    .background(Color.gray.opacity(0.1))
-                    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-            case .empty:
+                    .clipShape(RoundedRectangle(cornerRadius: 5, style: .continuous))
+            } else {
                 ProgressView()
                     .frame(width: cellSize, height: cellSize)
                     .background(Color.gray.opacity(0.2))
-                    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-                    
-            @unknown default:
-                EmptyView()
+                    .clipShape(RoundedRectangle(cornerRadius: 5, style: .continuous))
             }
         }
+        .onAppear {
+            loadImage()
+        }
+        .onDisappear {
+            cancellable?.cancel()
+        }
+    }
+    
+    private func loadImage() {
+        guard let url = URL(string: photo.downloadURL) else { return }
+        
+        if image != nil {
+            return
+        }
+        
+        cancellable = ImageCacheService.shared.loadImage(from: url)
+            .sink { image in
+                self.image = image
+            }
     }
 }
