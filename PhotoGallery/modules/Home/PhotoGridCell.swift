@@ -12,12 +12,11 @@ struct PhotoGridCell: View {
     let photo: Photo
     let cellSize: CGFloat
     
-    @State private var image: UIImage? = nil
-    @State private var cancellable: AnyCancellable? = nil
+    @StateObject private var loader = ImageLoader()
     
     var body: some View {
         ZStack {
-            if let image = image {
+            if let image = loader.image {
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFill()
@@ -31,23 +30,9 @@ struct PhotoGridCell: View {
             }
         }
         .onAppear {
-            loadImage()
-        }
-        .onDisappear {
-            cancellable?.cancel()
-        }
-    }
-    
-    private func loadImage() {
-        guard let url = URL(string: photo.downloadURL) else { return }
-        
-        if image != nil {
-            return
-        }
-        
-        cancellable = ImageCacheService.shared.loadImage(from: url)
-            .sink { image in
-                self.image = image
+            if let url = URL(string: photo.downloadURL) {
+                loader.load(from: url)
             }
+        }
     }
 }
