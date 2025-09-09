@@ -23,13 +23,14 @@ final class HomeViewModelTests: XCTestCase {
         mockNetWork = MockNetworkService()
         mockImageCache = MockImageCacheService()
         viewModel = HomeViewModel(networkService: mockNetWork, imageCacheService: mockImageCache)
+        cancellables = []
     }
     
     override func tearDown() {
         cancellables.removeAll()
-        viewModel = nil
         mockNetWork = nil
         mockImageCache = nil
+        viewModel = nil
         super.tearDown()
     }
     
@@ -60,4 +61,29 @@ final class HomeViewModelTests: XCTestCase {
         XCTAssertFalse(viewModel.isLoading)
         
     }
+    
+    
+    func test_LoadInitialPhotos_Failure() {
+        let networkError = URLError(.notConnectedToInternet)
+        mockNetWork.errorToReturn = networkError
+        let expectation = XCTestExpectation(description: "Error received")
+        
+        viewModel.$errorMessage
+            .dropFirst()
+            .sink { error in
+                if let error = error {
+                    XCTAssertFalse(error.isEmpty, "Error message should not be empty")
+                    XCTAssertEqual(error, networkError.localizedDescription)
+                    expectation.fulfill()
+                }
+            }
+            .store(in: &cancellables)
+        
+        viewModel.loadInitialPhotos()
+        
+        wait(for: [expectation], timeout: 1.0)
+        XCTAssertTrue(viewModel.photos.isEmpty)
+        XCTAssertFalse(viewModel.isLoading)
+    }
+
 }
