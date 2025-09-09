@@ -86,4 +86,23 @@ final class HomeViewModelTests: XCTestCase {
         XCTAssertFalse(viewModel.isLoading)
     }
 
+    
+    func testLoadImage_cachesImage() {
+        let photo = Photo(id: "1", author: "a1", width: 200, height: 200, url: "url1", downloadURL: "url1")
+        
+        mockImageCache.imageToReturn = UIImage(systemName: "photo")
+        let expectation = XCTestExpectation(description: "Image cached")
+        
+        viewModel.$imagesCache
+            .dropFirst()
+            .sink { cache in
+                XCTAssertNotNil(cache[photo.id])
+                expectation.fulfill()
+            }
+            .store(in: &cancellables)
+        
+        viewModel.loadImage(for: photo, size: CGSize(width: 200, height: 200))
+        
+        wait(for: [expectation], timeout: 1.0)
+    }
 }
