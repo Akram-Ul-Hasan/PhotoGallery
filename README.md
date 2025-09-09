@@ -43,3 +43,7 @@ A simple iOS application built with **SwiftUI** that displays a collection of ph
 
 **Save and Share Sheet**  
 ![Save and Share](screenshots/shareSheetView.png)
+
+**Zoomed Image**
+![Zoomed Image](screenshots/zoomedImage.png)
+
