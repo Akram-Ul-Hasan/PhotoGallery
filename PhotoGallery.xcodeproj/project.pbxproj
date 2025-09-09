@@ -26,6 +26,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				core/Models/Photo.swift,
+				core/Models/ShareItem.swift,
 				core/Protocols/ImageCacheServiceProtocol.swift,
 				core/Protocols/NetworkServiceProtocol.swift,
 				core/Services/ImageCacheService.swift,

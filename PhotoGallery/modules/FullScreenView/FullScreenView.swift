@@ -18,8 +18,8 @@ struct FullScreenView: View {
     @State private var gestureOffset: CGSize = .zero
     
     @State private var isShowingShareSheet = false
-    @State private var shareItems: [Any] = []
-    
+    @State private var shareItem: ShareItem?
+
     var body: some View {
         ZStack {
             Color.blackLevel1
@@ -110,8 +110,7 @@ struct FullScreenView: View {
                 
                 Button {
                     if let url = URL(string: photoURL) {
-                        shareItems = [url]
-                        isShowingShareSheet = true
+                        shareItem = ShareItem(url: url)
                     }
                 } label: {
                     Image(systemName: "square.and.arrow.up")
@@ -120,8 +119,8 @@ struct FullScreenView: View {
                 }
             }
         }
-        .sheet(isPresented: $isShowingShareSheet) {
-            ShareSheet(activityItems: shareItems)
+        .sheet(item: $shareItem) { item in
+            ShareSheet(activityItems: [item.url])
                 .presentationDetents([.medium])
                 .presentationDragIndicator(.visible)
         }
