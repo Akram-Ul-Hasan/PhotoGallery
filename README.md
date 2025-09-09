@@ -15,21 +15,26 @@ A simple iOS application built with **SwiftUI** that displays a collection of ph
 - Save photos to the device’s gallery in **JPEG format**.
 - Share photos via **UIActivityViewController**.
 
-### Optional/Planned Enhancements
-- Image caching
-- API response caching
-- Unit tests (not implemented yet)
-
+### Optional / Completed Enhancements
+- **Unit tests** covering key functionalities of `HomeViewModel`.  
+- **Image caching** to reduce repeated network calls.  
+- **API response caching** using `URLCache`.  
 ---
 
 ## Architecture
 
-- **SwiftUI**: Declarative UI for both grid and full-screen views.
-- **Combine**: Handles network requests and state updates.
+- **SwiftUI**: Declarative UI for both grid and full-screen views.  
 - **MVVM Pattern**:
-  - `HomeViewModel`: Manages photo fetching and state.
-  - `FullScreenPhotoViewModel`: Handles photo saving and messages.
-- `PhotoSaverService`: Responsible for saving images to the photo library.
+  - `HomeViewModel`: Manages fetching, pagination, and caching of photos.  
+  - `FullScreenPhotoViewModel`: Handles saving and sharing photos, zoom state.  
+- **Services**:
+  - `NetworkService`: Handles API calls.  
+  - `ImageCacheService`: Manages caching of loaded images.  
+  - `PhotoSaverService`: Saves images to the device gallery.  
+- **Combine**: Handles asynchronous data flow and state updates.  
+- **Unit Tests**:
+  - Mock services (`MockNetworkService`, `MockImageCacheService`) for isolated testing.  
+  - `HomeViewModelTests` verifies photo loading, error handling, pagination, and image caching.  
 
 ---
 
@@ -47,3 +52,10 @@ A simple iOS application built with **SwiftUI** that displays a collection of ph
 **Zoomed Image**
 ![Zoomed Image](screenshots/zoomedImage.png)
 
+---
+
+## Installation
+
+1. Clone the repository:  
+```bash
+git clone https://github.com/Akram-Ul-Hasan/PhotoGallery.git
