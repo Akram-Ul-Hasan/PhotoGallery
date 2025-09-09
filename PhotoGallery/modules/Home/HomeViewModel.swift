@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import UIKit
 
 final class HomeViewModel: ObservableObject {
     @Published var photos: [Photo] = []
@@ -14,6 +15,7 @@ final class HomeViewModel: ObservableObject {
     @Published var errorMessage: String?
     
     private let networkService: NetworkServiceProtocol
+    private let imageCacheService: ImageCacheServiceProtocol
     private var cancellables = Set<AnyCancellable>()
     
     private var currentPage = 1
@@ -21,12 +23,16 @@ final class HomeViewModel: ObservableObject {
     private var canLoadMore = true
     private var lastLoadedPage: Int?
     
+    @Published var imagesCache: [String: UIImage] = [:]
+    private var cancellable: AnyCancellable?
+
     var isFirstLoad: Bool {
         photos.isEmpty && isLoading
     }
     
-    init(networkService: NetworkServiceProtocol = NetworkService.shared) {
+    init(networkService: NetworkServiceProtocol = NetworkService.shared, imageCacheService: ImageCacheServiceProtocol = ImageCacheService.shared) {
         self.networkService = networkService
+        self.imageCacheService = imageCacheService
     }
     
     func loadInitialPhotos() {
@@ -76,5 +82,21 @@ final class HomeViewModel: ObservableObject {
         canLoadMore = true
         errorMessage = nil
         lastLoadedPage = nil
+    }
+    
+    func loadImage(for photo: Photo, size: CGSize) {
+        guard imagesCache[photo.id] == nil else {
+            return
+        }
+        
+        if let url = URL(string: "https://picsum.photos/id/\(photo.id)/\(Int(size.width))/\(Int(size.height))") {
+            
+            imageCacheService.loadImage(from: url)
+                .sink { [weak self] image in
+                    guard let self = self else { return }
+                    self.imagesCache[photo.id] = image
+                }
+                .store(in: &cancellables)
+        }
     }
 }
