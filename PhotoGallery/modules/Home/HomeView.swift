@@ -39,9 +39,10 @@ struct HomeView: View {
                         LazyVGrid(columns: columns, spacing: spacing) {
                             ForEach(viewModel.photos) { photo in
                                 NavigationLink(destination: FullScreenView(photoURL: photo.downloadURL)) {
-                                    PhotoGridCell(photo: photo, cellSize: cellSize)
+                                    PhotoGridCell(image: viewModel.imagesCache[photo.id], cellSize: cellSize)
                                 }
                                 .onAppear {
+                                    viewModel.loadImage(for: photo, size: CGSize(width: cellSize, height: cellSize))
                                     viewModel.loadMorePhotosIfNeeded(currentItem: photo)
                                 }
                             }
