@@ -25,8 +25,11 @@
 		B1C6F3D32E7039380010B757 /* Exceptions for "PhotoGallery" folder in "PhotoGalleryTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				core/Models/Photo.swift,
 				core/Protocols/ImageCacheServiceProtocol.swift,
 				core/Protocols/NetworkServiceProtocol.swift,
+				core/Services/ImageCacheService.swift,
+				core/Services/NetworkService.swift,
 				modules/Home/HomeViewModel.swift,
 			);
 			target = B1C6F3BC2E701E060010B757 /* PhotoGalleryTests */;
