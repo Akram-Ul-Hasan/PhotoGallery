@@ -16,9 +16,9 @@ A simple iOS application built with **SwiftUI** that displays a collection of ph
 - Share photos via **UIActivityViewController**.
 
 ### Optional/Planned Enhancements
+- Image caching
+- API response caching
 - Unit tests (not implemented yet)
-- Image caching (not implemented yet)
-- API response caching (not implemented yet)
 
 ---
 
@@ -33,13 +33,13 @@ A simple iOS application built with **SwiftUI** that displays a collection of ph
 
 ---
 
-## Screenshots
+### Screenshots
 
-
-- **Grid View**
-
-```markdown
+**Grid View**  
 ![Grid View](screenshots/homeGridView.png)
-![Full-Screen View](screenshots/fullScreenPhoto.png)
-![Save and Share](screenshots/shareSheetView.png)
 
+**Full-Screen View**  
+![Full-Screen View](screenshots/fullScreenPhoto.png)
+
+**Save and Share Sheet**  
+![Save and Share](screenshots/shareSheetView.png)
